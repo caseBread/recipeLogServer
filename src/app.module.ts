@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { Recipe } from './entity/recipes/recipe.entity';
 import { MyRecipe } from './entity/my-recipes/my-recipe.entity';
 import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
+import { RecipeModule } from './recipe/recipe.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
       entities: [Recipe, MyRecipe, MyRecipeNote],
       synchronize: true, // 개발용: true (자동 테이블 생성), 운영 시 false 권장
     }),
-    TypeOrmModule.forFeature([Recipe, MyRecipe, MyRecipeNote]),
+    RecipeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
