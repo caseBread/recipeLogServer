@@ -1,45 +1,48 @@
 import { Injectable } from '@nestjs/common';
-// import { google } from 'googleapis';
+import axios from 'axios';
 
 @Injectable()
 export class RecipeService {
-  //   private youtube = google.youtube('v3');
-  //   private apiKey = 'YOUR_YOUTUBE_API_KEY'; // 🔥 실제 키로 변경
+  private readonly youtubeApiKey = 'AIzaSyCMhXosD2Dc0reU_zg5zMk4gjMmPATcfyg';
+  private readonly youtubeBaseUrl = 'https://www.googleapis.com/youtube/v3';
 
   async searchRecipes(query: string) {
     if (!query) {
       return [];
     }
 
-    /** TODO : 유튜브 API로 영상정보 가져오기 */
-    // // 1️⃣ Search API로 영상 ID 가져오기
-    // const searchRes = await this.youtube.search.list({
-    //   key: this.apiKey,
-    //   q: query,
-    //   type: 'video',
-    //   part: ['id'],
-    //   maxResults: 5,
-    // });
+    // 1️⃣ 검색 리스트 요청 (여기서는 activities가 아니라 search API 사용 권장!)
+    const searchUrl = `${this.youtubeBaseUrl}/search`;
+    const searchParams = {
+      key: this.youtubeApiKey,
+      q: query,
+      type: 'video',
+      part: 'id',
+      maxResults: 5,
+    };
 
-    // const videoIds = searchRes.data.items
-    //   ?.map((item) => item.id?.videoId)
-    //   .filter(Boolean) as string[];
+    const searchRes = await axios.get(searchUrl, { params: searchParams });
+    const videoIds = searchRes.data.items
+      ?.map((item) => item.id?.videoId)
+      .filter(Boolean) as string[];
 
-    // if (videoIds.length === 0) {
-    //   return [];
-    // }
+    if (!videoIds.length) {
+      return [];
+    }
 
-    // // 2️⃣ Videos API로 상세 정보 가져오기
-    // const videoRes = await this.youtube.videos.list({
-    //   key: this.apiKey,
-    //   id: videoIds.join(','),
-    //   part: ['snippet', 'statistics'],
-    // });
-    const videoRes = { data: { items: [] } }; // TODO : 유튜브 결과의 가공값을 담을 곳
+    // 2️⃣ 영상 상세 정보 요청
+    const detailsUrl = `${this.youtubeBaseUrl}/videos`;
+    const detailsParams = {
+      key: this.youtubeApiKey,
+      id: videoIds.join(','),
+      part: 'snippet,statistics',
+    };
 
-    // 3️⃣ 원하는 형태로 가공
+    const detailsRes = await axios.get(detailsUrl, { params: detailsParams });
+
+    // 3️⃣ 결과 가공
     return (
-      videoRes.data.items?.map((item) => ({
+      detailsRes.data.items?.map((item) => ({
         title: item.snippet?.title,
         description: item.snippet?.description,
         link: `https://www.youtube.com/watch?v=${item.id}`,
