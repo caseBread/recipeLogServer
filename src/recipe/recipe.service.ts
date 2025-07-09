@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
 @Injectable()
 export class RecipeService {
-  private readonly youtubeApiKey = 'AIzaSyCMhXosD2Dc0reU_zg5zMk4gjMmPATcfyg';
   private readonly youtubeBaseUrl = 'https://www.googleapis.com/youtube/v3';
+
+  constructor(private configService: ConfigService) {}
 
   async searchRecipes(query: string) {
     if (!query) {
       return [];
     }
 
+    const apiKey = this.configService.get<string>('YOUTUBE_API_KEY');
+
     // 1️⃣ 검색 리스트 요청 (여기서는 activities가 아니라 search API 사용 권장!)
     const searchUrl = `${this.youtubeBaseUrl}/search`;
     const searchParams = {
-      key: this.youtubeApiKey,
+      key: apiKey,
       q: query,
       type: 'video',
       part: 'id',
@@ -33,7 +37,7 @@ export class RecipeService {
     // 2️⃣ 영상 상세 정보 요청
     const detailsUrl = `${this.youtubeBaseUrl}/videos`;
     const detailsParams = {
-      key: this.youtubeApiKey,
+      key: apiKey,
       id: videoIds.join(','),
       part: 'snippet,statistics',
     };

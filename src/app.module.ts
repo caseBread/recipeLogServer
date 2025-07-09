@@ -6,9 +6,13 @@ import { Recipe } from './entity/recipes/recipe.entity';
 import { MyRecipe } from './entity/my-recipes/my-recipe.entity';
 import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
 import { RecipeModule } from './recipe/recipe.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // 전역으로 사용
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '127.0.0.1',
