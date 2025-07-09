@@ -7,8 +7,8 @@ import { MyRecipe } from './entity/my-recipes/my-recipe.entity';
 import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
 import { RecipeModule } from './recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
-import { User } from './user.entity';
 import { AuthModule } from './auth/auth.module';
+import { User } from './entity/user/user.entity';
 
 @Module({
   imports: [

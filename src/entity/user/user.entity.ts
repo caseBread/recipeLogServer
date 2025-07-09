@@ -12,18 +12,18 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ nullable: true })
+  kakaoId: string;
 
   @Column({ nullable: true })
-  name: string;
+  nickname: string;
 
   @Column({ nullable: true })
   profileImage: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
