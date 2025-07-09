@@ -47,6 +47,7 @@ export class RecipeService {
     // 3️⃣ 결과 가공
     return (
       detailsRes.data.items?.map((item) => ({
+        id: item.id, // unique key
         title: item.snippet?.title,
         description: item.snippet?.description,
         link: `https://www.youtube.com/watch?v=${item.id}`,
