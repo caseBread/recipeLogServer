@@ -7,6 +7,7 @@ import { MyRecipe } from './entity/my-recipes/my-recipe.entity';
 import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
 import { RecipeModule } from './recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
+import { User } from './user.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       username: 'root', // 사용자 이름
       password: '', // 사용자 비밀번호
       database: 'recipe_log_db', // DB 이름
-      entities: [Recipe, MyRecipe, MyRecipeNote],
+      entities: [Recipe, MyRecipe, MyRecipeNote, User],
       synchronize: true, // 개발용: true (자동 테이블 생성), 운영 시 false 권장
     }),
     RecipeModule,
