@@ -1,12 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
+import { MyRecipeNote } from 'src/entity/my-recipe-notes/my-recipe-note.entity';
+import { Recipe } from 'src/entity/recipes/recipe.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecipeService {
   private readonly youtubeBaseUrl = 'https://www.googleapis.com/youtube/v3';
 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    @InjectRepository(Recipe)
+    private recipeRepository: Repository<Recipe>,
+    @InjectRepository(MyRecipeNote)
+    private myRecipeNoteRepository: Repository<MyRecipeNote>,
+  ) {}
 
   async searchRecipes(query: string) {
     if (!query) {
@@ -59,4 +69,56 @@ export class RecipeService {
       })) || []
     );
   }
+
+  /**
+   * 📄 상세 조회 API
+   */
+  async getYoutubeVideoDetail(videoId: string) {
+    const apiKey = this.configService.get<string>('YOUTUBE_API_KEY');
+
+    const detailsUrl = `${this.youtubeBaseUrl}/videos`;
+    const params = {
+      key: apiKey,
+      id: videoId,
+      part: 'snippet,statistics',
+    };
+
+    const videoRes = await axios.get(detailsUrl, { params });
+    const video = videoRes.data.items?.[0];
+
+    if (!video) return null;
+
+    return {
+      id: video.id,
+      title: video.snippet?.title,
+      description: video.snippet?.description,
+      link: `https://www.youtube.com/watch?v=${video.id}`,
+      youtuber: video.snippet?.channelTitle,
+      published_at: video.snippet?.publishedAt,
+      view_count: Number(video.statistics?.viewCount) || 0,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+  }
+
+  // /**
+  //  * ✍️ 나의 레시피 노트 가져오기
+  //  */
+  // async getMyRecipeNote(videoId: string) {
+  //   const recipe = await this.recipeRepository.findOne({
+  //     where: { youtube_video_id: videoId },
+  //   });
+
+  //   if (!recipe) {
+  //     return { content: '' };
+  //   }
+
+  //   const note = await this.myRecipeNoteRepository.findOne({
+  //     where: { recipe: { id: recipe.id } },
+  //   });
+
+  //   return {
+  //     content: note?.content || '',
+  //   };
+  // }
 }
