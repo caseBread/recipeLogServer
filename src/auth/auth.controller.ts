@@ -1,9 +1,18 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Redirect, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('kakao/login')
+  @Redirect()
+  async kakaoLogin(@Query('redirect') redirect: string) {
+    const redirectUrl = this.authService.getKakaoLoginRedirectUrl(redirect);
+    return {
+      url: redirectUrl,
+    };
+  }
 
   @Get('kakao/callback')
   async kakaoCallback(@Query('code') code: string) {

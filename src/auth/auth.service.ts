@@ -6,9 +6,20 @@ export class AuthService {
   private readonly kakaoClientId = process.env.KAKAO_CLIENT_ID;
   private readonly kakaoRedirectUri = process.env.KAKAO_REDIRECT_URI;
 
-  /**
-   * 카카오 access token 받아오기
-   */
+  getKakaoLoginRedirectUrl(state: string) {
+    const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
+    const params = new URLSearchParams();
+    params.append('response_type', 'code');
+    params.append('client_id', this.kakaoClientId);
+    params.append('redirect_uri', this.kakaoRedirectUri);
+
+    if (state) {
+      params.append('state', state);
+    }
+
+    return `${baseUrl}?${params.toString()}`;
+  }
+
   async getKakaoAccessToken(code: string) {
     const tokenUrl = 'https://kauth.kakao.com/oauth/token';
     const params = new URLSearchParams();
@@ -24,9 +35,6 @@ export class AuthService {
     return res.data.access_token;
   }
 
-  /**
-   * 카카오 사용자 정보 받아오기
-   */
   async getKakaoUserInfo(accessToken: string) {
     const res = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {

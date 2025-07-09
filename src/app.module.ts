@@ -8,6 +8,7 @@ import { MyRecipeNote } from './entity/my-recipe-notes/my-recipe-note.entity';
 import { RecipeModule } from './recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { User } from './user.entity';
       synchronize: true, // 개발용: true (자동 테이블 생성), 운영 시 false 권장
     }),
     RecipeModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
