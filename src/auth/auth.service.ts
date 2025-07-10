@@ -71,7 +71,6 @@ export class AuthService {
 
     if (!user) {
       user = this.userRepository.create({
-        kakaoId,
         nickname,
         profileImage,
       });

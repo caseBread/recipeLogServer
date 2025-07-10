@@ -18,6 +18,9 @@ export class User {
   @Column({ nullable: true })
   nickname: string;
 
+  @Column('simple-array', { nullable: true })
+  myRecipes: string[];
+
   @Column({ nullable: true })
   profileImage: string;
 
