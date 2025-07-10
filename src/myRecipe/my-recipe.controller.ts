@@ -12,15 +12,29 @@ import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
-@Controller('myRecipes')
+@ApiTags('My Recipes')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Controller('myRecipes')
 export class MyRecipeController {
   constructor(
     private readonly myRecipeService: MyRecipeService,
     private readonly configService: ConfigService,
   ) {}
 
+  @ApiOperation({ summary: '나의 레시피 목록 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공적으로 레시피 목록을 반환했습니다.',
+  })
   @Get()
   async getMyRecipes(@Req() req: Request) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -61,6 +75,16 @@ export class MyRecipeController {
     );
   }
 
+  @ApiOperation({ summary: '레시피 추가' })
+  @ApiQuery({
+    name: 'youtubeId',
+    description: '추가할 유튜브 영상 ID',
+    required: true,
+  })
+  @ApiResponse({
+    status: 201,
+    description: '레시피가 성공적으로 추가되었습니다.',
+  })
   @Post()
   async addMyRecipe(
     @Req() req: Request,
@@ -72,6 +96,16 @@ export class MyRecipeController {
     return this.myRecipeService.addMyRecipe(userId, youtubeId);
   }
 
+  @ApiOperation({ summary: '레시피 삭제' })
+  @ApiQuery({
+    name: 'youtubeId',
+    description: '삭제할 유튜브 영상 ID',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: '레시피가 성공적으로 삭제되었습니다.',
+  })
   @Delete()
   async removeMyRecipe(
     @Req() req: Request,
