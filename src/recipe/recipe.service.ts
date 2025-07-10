@@ -68,8 +68,6 @@ export class RecipeService {
           item.snippet?.thumbnails?.medium?.url ||
           item.snippet?.thumbnails?.standard?.url ||
           '',
-        created_at: new Date(),
-        updated_at: new Date(),
       })) || []
     );
   }
