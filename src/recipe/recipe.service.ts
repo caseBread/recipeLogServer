@@ -32,7 +32,7 @@ export class RecipeService {
       q: query,
       type: 'video',
       part: 'id',
-      maxResults: 5,
+      maxResults: 20,
     };
 
     const searchRes = await axios.get(searchUrl, { params: searchParams });
@@ -64,6 +64,10 @@ export class RecipeService {
         youtuber: item.snippet?.channelTitle,
         published_at: item.snippet?.publishedAt,
         view_count: Number(item.statistics?.viewCount) || 0,
+        thumbnailUrl:
+          item.snippet?.thumbnails?.medium?.url ||
+          item.snippet?.thumbnails?.standard?.url ||
+          '',
         created_at: new Date(),
         updated_at: new Date(),
       })) || []
