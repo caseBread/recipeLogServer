@@ -30,6 +30,9 @@ export class Recipe {
   @Column({ type: 'int', default: 0 })
   view_count: number;
 
+  @Column({ type: 'varchar', length: 255 })
+  youtubeId: string;
+
   @CreateDateColumn()
   created_at: Date;
 

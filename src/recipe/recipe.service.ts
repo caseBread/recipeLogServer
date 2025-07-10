@@ -104,25 +104,4 @@ export class RecipeService {
       updated_at: new Date(),
     };
   }
-
-  // /**
-  //  * ✍️ 나의 레시피 노트 가져오기
-  //  */
-  // async getMyRecipeNote(videoId: string) {
-  //   const recipe = await this.recipeRepository.findOne({
-  //     where: { youtube_video_id: videoId },
-  //   });
-
-  //   if (!recipe) {
-  //     return { content: '' };
-  //   }
-
-  //   const note = await this.myRecipeNoteRepository.findOne({
-  //     where: { recipe: { id: recipe.id } },
-  //   });
-
-  //   return {
-  //     content: note?.content || '',
-  //   };
-  // }
 }

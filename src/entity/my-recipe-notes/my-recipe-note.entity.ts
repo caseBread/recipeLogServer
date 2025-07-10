@@ -5,18 +5,19 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Recipe } from '../recipes/recipe.entity';
+import { User } from '../user/user.entity';
 
 @Entity('my_recipe_notes')
 export class MyRecipeNote {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Recipe)
-  @JoinColumn({ name: 'recipe_id' })
-  recipe: Recipe;
+  @Column({ type: 'varchar', length: 255 })
+  youtubeId: string; // ✅ Recipe 대신 youtubeId 직접 저장
+
+  @ManyToOne(() => User)
+  user: User;
 
   @Column({ type: 'text' })
   content: string;
