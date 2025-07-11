@@ -8,6 +8,20 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  // ✅ 요청과 응답 로깅 미들웨어
+  app.use((req, res, next) => {
+    console.log(`[요청 받음] ${req.method} ${req.originalUrl}`);
+
+    // 응답이 끝나면 로그 출력
+    res.on('finish', () => {
+      console.log(
+        `[응답 보냄] ${req.method} ${req.originalUrl} - 상태코드: ${res.statusCode}`,
+      );
+    });
+
+    next();
+  });
+
   app.enableCors({
     origin: ['http://localhost:8080', 'https://recipe-log-eight.vercel.app'],
     credentials: true,
